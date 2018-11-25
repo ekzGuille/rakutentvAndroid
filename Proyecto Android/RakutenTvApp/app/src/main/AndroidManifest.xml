@@ -27,7 +27,13 @@
         </activity>
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".ListaPeliculasActivity"></activity>
-        <activity android:name=".InfoPeliculaActivity"></activity>
+        <activity
+            android:name=".InfoPeliculaActivity"
+            android:parentActivityName=".InfoPeliculaActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InfoPeliculaActivity"></meta-data>
+        </activity>
     </application>
 
 </manifest>
