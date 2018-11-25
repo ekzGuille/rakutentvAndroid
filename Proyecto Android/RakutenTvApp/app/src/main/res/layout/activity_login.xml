@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/dorado"
-            android:cursorVisible="false"
+            android:cursorVisible="true"
             android:ems="10"
             android:inputType="textEmailAddress"
             android:textColor="@color/blanco" />
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginTop="15dp"
-            android:cursorVisible="false"
+            android:cursorVisible="true"
             android:text="Contraseña:"
             android:textColor="@color/hueso"
             android:textSize="22dp" />
@@ -65,6 +65,18 @@
             android:inputType="textPassword"
             android:textColor="@color/blanco" />
 
+        <CheckBox
+            android:id="@+id/checkRecordar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:buttonTint="@color/dorado"
+            android:checked="false"
+            android:clickable="true"
+            android:text="No cerrar sesión"
+            android:textColor="@color/blanco"
+            android:textSize="17dp" />
 
         <Button
             android:id="@+id/btnEnviar"
@@ -80,18 +92,6 @@
             android:textColor="@color/dorado" />
 
 
-        <CheckBox
-            android:id="@+id/checkRecordar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:buttonTint="@color/dorado"
-            android:checked="false"
-            android:clickable="true"
-            android:text="No cerrar sesión"
-            android:textColor="@color/blanco"
-            android:textSize="17dp" />
 
     </LinearLayout>
 

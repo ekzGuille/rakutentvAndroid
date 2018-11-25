@@ -12,12 +12,12 @@ public class Usuario implements Serializable {
     private int idUsuario;
     private String username;
     private String email;
-    private String pass;
+    private String contrasena;
 
     private final static String ID_USUARIO = "idUsuario";
     private final static String USERNAME = "username";
     private final static String EMAIL = "email";
-    private final static String PASS = "contrasena";
+    private final static String CONTRASENA = "contrasena";
 
     public int getIdUsuario() {
         return idUsuario;
@@ -43,12 +43,12 @@ public class Usuario implements Serializable {
         this.email = email;
     }
 
-    public String getPass() {
-        return pass;
+    public String getContrasena() {
+        return contrasena;
     }
 
     public void setPass(String pass) {
-        this.pass = pass;
+        this.contrasena = pass;
     }
 
     public static ArrayList<Usuario> getArrayListFromJSon(JSONArray datos) {
@@ -64,7 +64,7 @@ public class Usuario implements Serializable {
                 usuario.setIdUsuario(json_data.getInt(ID_USUARIO));
                 usuario.setUsername(json_data.getString(USERNAME));
                 usuario.setEmail(json_data.getString(EMAIL));
-                usuario.setPass(json_data.getString(PASS));
+                usuario.setPass(json_data.getString(CONTRASENA));
                 lista.add(usuario);
             }
         } catch (JSONException e) {

@@ -6,29 +6,50 @@
     android:background="@color/grisOscuro">
 
   <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
       android:layout_gravity="right"
       android:paddingTop="5dp"
       android:paddingBottom="10dp">
-    <TextView
-        android:id="@+id/textSaludo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:gravity="right"
-        android:textColor="@color/blanco"
-        android:text="Bienvenido de nuevo "/>
-    <TextView
-        android:id="@+id/textLoggedUser"
-        android:layout_marginRight="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:textStyle="italic"
-        android:gravity="right"
-        android:textColor="@color/dorado"/>
+
+      <Button
+          android:id="@+id/btnSalir"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Cerrar Sessión"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+
+          android:layout_marginLeft="5dp"
+          android:background="@color/grisClaro"/>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="horizontal"
+          android:gravity="right|center">
+
+          <TextView
+              android:id="@+id/textSaludo"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="right"
+
+              android:text="Bienvenido de nuevo "
+              android:textColor="@color/blanco"
+              android:textSize="15dp" />
+
+          <TextView
+              android:id="@+id/textLoggedUser"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="10dp"
+              android:gravity="right"
+              android:textColor="@color/dorado"
+              android:textSize="15dp"
+              android:textStyle="italic" />
+      </LinearLayout>
   </LinearLayout>
 
 

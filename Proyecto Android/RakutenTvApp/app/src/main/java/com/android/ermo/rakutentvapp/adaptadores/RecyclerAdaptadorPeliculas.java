@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.ermo.rakutentvapp.R;
 import com.android.ermo.rakutentvapp.beans.Pelicula;
@@ -38,7 +39,7 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
 
-        Pelicula pelicula = items.get(position);
+        final Pelicula pelicula = items.get(position);
         holder.titulo.setText(pelicula.getTituloPeli());
         holder.mediaPuntuaciones.setText(String.valueOf(pelicula.getMediaValoraciones()));
         holder.vecesPuntuado.setText(String.valueOf(pelicula.getValoracionesTotales()));

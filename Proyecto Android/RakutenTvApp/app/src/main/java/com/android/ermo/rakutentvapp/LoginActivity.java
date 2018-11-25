@@ -2,12 +2,17 @@ package com.android.ermo.rakutentvapp;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,8 +30,9 @@ public class LoginActivity extends Activity {
     private EditText edtEmail;
     private EditText edtContrasena;
     private Button btnLogin;
+    private CheckBox checkRecordar;
 
-    private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
+    private static final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
 
     /*Patrón Singleton*/
     private static LoginActivity loginActivity;
@@ -34,6 +40,7 @@ public class LoginActivity extends Activity {
     public static LoginActivity getInstance() {
         return loginActivity;
     }
+
 
     /*Fin*/
     @Override
@@ -45,25 +52,48 @@ public class LoginActivity extends Activity {
 
         edtEmail = (EditText) findViewById(R.id.edtEmail);
         edtContrasena = (EditText) findViewById(R.id.edtContrasena);
-
-
+        checkRecordar = (CheckBox) findViewById(R.id.checkRecordar);
         btnLogin = (Button) findViewById(R.id.btnEnviar);
-        btnLogin.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                /*ServiceLogin.accionLogin(edtEmail.getText().toString(), edtPass.getText().toString());*/
-                HashMap<String, String> parametros = new HashMap<String, String>();
-                // CLAVE------VALOR
-                parametros.put("ACTION", "Usuario.login");
-                parametros.put("userMail", edtEmail.getText().toString());
-                parametros.put("contrasena", edtContrasena.getText().toString());
 
-                TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-                tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
-            }
-        });
+
+        SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+
+        String userName = userPreferences.getString("userName", "");
+        String email = userPreferences.getString("email", "");
+        String contrasena = userPreferences.getString("contrasena", "");
+
+        if (userName.equals("") || email.equals("") || contrasena.equals("")) {
+
+            btnLogin.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    ejecutarEnvioLogin(edtEmail.getText().toString(), edtContrasena.getText().toString());
+                }
+            });
+        } else {
+            ejecutarEnvioLogin(userName, contrasena);
+        }
+
     }
 
-    class TareaSegundoPlano extends AsyncTask<String, Integer, Boolean> {
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    public void ejecutarEnvioLogin(String usuario, String contrasena) {
+        /*ServiceLogin.accionLogin(edtEmail.getText().toString(), edtPass.getText().toString());*/
+        HashMap<String, String> parametros = new HashMap<String, String>();
+        // CLAVE------VALOR
+        parametros.put("ACTION", "Usuario.login");
+        parametros.put("userMail", usuario);
+        parametros.put("contrasena", contrasena);
+
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+    }
+
+     class TareaSegundoPlano extends AsyncTask<String, Integer, Boolean> {
         private HashMap<String, String> parametros;
         private ArrayList<Usuario> listaUsuarios;
 
@@ -87,7 +117,19 @@ public class LoginActivity extends Activity {
             if (aBoolean) {
                 if (listaUsuarios != null && listaUsuarios.size() > 0) {
                     Usuario usuario = listaUsuarios.get(0);
-//                    Toast.makeText(LoginActivity.this, "Usuario Correcto!!" + "\nId=" + cliente.getIdUsuario() + "\nEmail=" + cliente.getEmail(), Toast.LENGTH_LONG).show();
+
+                    if (checkRecordar.isChecked()) {
+
+                        SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = userPreferences.edit();
+
+                        editor.putString("userName", usuario.getUsername());
+                        editor.putString("email", usuario.getEmail());
+                        editor.putString("contrasena", usuario.getContrasena());
+
+                        editor.apply();
+                    }
+
                     Intent intent = new Intent(LoginActivity.this, ListaPeliculasActivity.class);
                     intent.putExtra("usuario", usuario);
                     startActivity(intent);

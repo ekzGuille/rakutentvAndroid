@@ -1,11 +1,16 @@
 package com.android.ermo.rakutentvapp;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +30,7 @@ public class ListaPeliculasActivity extends Activity {
     private RecyclerAdaptadorPeliculas adaptadorPeliculas;
     private RecyclerView recyclerView;
     private TextView tx;
+    private Button btnSalir;
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
     private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieCaratula/";
@@ -41,6 +47,24 @@ public class ListaPeliculasActivity extends Activity {
         listaPeliculasActivity = this;
 
         tx = (TextView) findViewById(R.id.textLoggedUser);
+        btnSalir = (Button) findViewById(R.id.btnSalir);
+
+        btnSalir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = userPreferences.edit();
+
+                editor.remove("userName");
+                editor.remove("email");
+                editor.remove("contreasena");
+
+                editor.apply();
+
+                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if(getIntent().hasExtra("usuario")) {
             Usuario usuario = (Usuario) getIntent().getExtras().getSerializable("usuario");
@@ -59,6 +83,12 @@ public class ListaPeliculasActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     class TareaSegundoPlano extends AsyncTask<String, Integer, Boolean> {
