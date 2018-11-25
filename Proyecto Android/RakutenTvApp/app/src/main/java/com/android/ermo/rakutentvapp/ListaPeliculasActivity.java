@@ -3,18 +3,15 @@ package com.android.ermo.rakutentvapp;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.ermo.rakutentvapp.adaptadores.AdaptadorPeliculas;
+import com.android.ermo.rakutentvapp.adaptadores.RecyclerAdaptadorPeliculas;
 import com.android.ermo.rakutentvapp.beans.Pelicula;
 import com.android.ermo.rakutentvapp.beans.Usuario;
-import com.android.ermo.rakutentvapp.datos.RakutenData;
 import com.android.ermo.rakutentvapp.tools.IPGetter;
 import com.android.ermo.rakutentvapp.tools.Post;
 
@@ -23,52 +20,40 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ListaOfertasActivity extends Activity {
+public class ListaPeliculasActivity extends Activity {
     private ArrayList<Pelicula> m_pelis = new ArrayList<Pelicula>();
-    private AdaptadorPeliculas adaptadorPeliculas;
-    private ListView lv;
+    private RecyclerAdaptadorPeliculas adaptadorPeliculas;
+    private RecyclerView recyclerView;
     private TextView tx;
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
-    private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/AndroidAsynktaskBack/images/pelicula/";
+    private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieCaratula/";
 
-
-    private static ListaOfertasActivity listaOfertasActivity = null;
-
-    public static ListaOfertasActivity getInstance() {
-        return listaOfertasActivity;
+    private static ListaPeliculasActivity listaPeliculasActivity = null;
+    public static ListaPeliculasActivity getInstance() {
+        return listaPeliculasActivity;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_ofertas);
-        listaOfertasActivity = this;
+        setContentView(R.layout.activity_lista_peliculas);
+        listaPeliculasActivity = this;
 
         tx = (TextView) findViewById(R.id.textLoggedUser);
 
-        Usuario cliente = (Usuario) getIntent().getExtras().getSerializable("usuario");
+        if(getIntent().hasExtra("usuario")) {
+            Usuario usuario = (Usuario) getIntent().getExtras().getSerializable("usuario");
 
-        tx.setText("Logged as: " + cliente.getEmail());
-        lv = (ListView) findViewById(R.id.listView);
-        lv.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                Pelicula pelicula = (Pelicula) parent.getItemAtPosition(position);
+            tx.setText(" "+usuario.getUsername());
+        }
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewPeliculas);
 
-                // Almacenar la pelicula seleccionada para que sea accesible
-                // desde cualquier punto de la aplicacion
-                RakutenData.setPeliculaSeleccionada(pelicula);
-            }
-        });
         HashMap<String, String> parametros = new HashMap<String, String>();
         parametros.put("ACTION", "Pelicula.listAll");
 
         TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/AndroidAsynktaskBack/Controller");
-
-
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
     }
 
     @Override
@@ -116,12 +101,13 @@ public class ListaOfertasActivity extends Activity {
             try {
                 if (resp && listaPeliculas != null && listaPeliculas.size() > 0) {
                     for (Pelicula pelicula : listaPeliculas) {
-                        pelicula.setUrlImagen(PATH_FOTO + pelicula.getUrlImagen());
+                        pelicula.setCaratulaPeli(PATH_FOTO + pelicula.getCaratulaPeli());
                     }
-                    adaptadorPeliculas = new AdaptadorPeliculas(getBaseContext(), listaPeliculas);
-                    lv.setAdapter(adaptadorPeliculas);
+                    adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(),listaPeliculas);
+                    recyclerView.setAdapter(adaptadorPeliculas);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                 } else {
-                    Toast.makeText(ListaOfertasActivity.getInstance().getBaseContext(), "Lista incorrecta. ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "Lista incorrecta. ", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 // TODO: handle exception

@@ -15,6 +15,8 @@ public class Pelicula {
     private String fechaEstreno;
     private int duracionPeli;
     private double precioPeli;
+    private int valoracionesTotales;
+    private double mediaValoraciones;
 
 
     private final static String ID_PELICULA = "idPelicula";
@@ -24,6 +26,8 @@ public class Pelicula {
     private final static String FECHA = "fechaEstreno";
     private final static String DURACION = "duracionPeli";
     private final static String PRECIO = "precioPeli";
+    private final static String VALORACIONES_TOTALES = "valoracionesTotales";
+    private final static String MEDIA_VALORACIONES = "mediaValoraciones";
 
     public int getIdPelicula() {
         return idPelicula;
@@ -81,6 +85,22 @@ public class Pelicula {
         this.precioPeli = precioPeli;
     }
 
+    public int getValoracionesTotales() {
+        return valoracionesTotales;
+    }
+
+    public void setValoracionesTotales(int valoracionesTotales) {
+        this.valoracionesTotales = valoracionesTotales;
+    }
+
+    public double getMediaValoraciones() {
+        return mediaValoraciones;
+    }
+
+    public void setMediaValoraciones(double mediaValoraciones) {
+        this.mediaValoraciones = mediaValoraciones;
+    }
+
     public static ArrayList<Pelicula> getArrayListFromJSon(JSONArray datos) {
         ArrayList<Pelicula> lista = null;
         Pelicula pelicula = null;
@@ -99,6 +119,8 @@ public class Pelicula {
                 pelicula.setFechaEstreno(json_data.getString(FECHA));
                 pelicula.setDuracionPeli(json_data.getInt(DURACION));
                 pelicula.setPrecioPeli(json_data.getDouble(PRECIO));
+                pelicula.setValoracionesTotales(json_data.getInt(VALORACIONES_TOTALES));
+                pelicula.setMediaValoraciones(json_data.getDouble(MEDIA_VALORACIONES));
                 lista.add(pelicula);
             }
         } catch (JSONException e) {

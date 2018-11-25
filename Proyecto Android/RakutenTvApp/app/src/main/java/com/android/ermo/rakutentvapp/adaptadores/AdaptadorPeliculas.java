@@ -42,24 +42,30 @@ public class AdaptadorPeliculas extends ArrayAdapter<Pelicula> {
             LayoutInflater layoutInflater = (LayoutInflater) LayoutInflater.from(context);
             convertView = layoutInflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
-            holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.text = (TextView) convertView.findViewById(R.id.row_toptext);
+            holder.caratula = (ImageView) convertView.findViewById(R.id.caratula);
+            holder.titulo = (TextView) convertView.findViewById(R.id.titulo);
+            holder.mediaPuntuaciones = (TextView) convertView.findViewById(R.id.mediaPuntuaciones);
+            holder.vecesPuntuado = (TextView) convertView.findViewById(R.id.vecesPuntuado);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.text.setText(o.getTituloPeli());
 
+        holder.titulo.setText(o.getTituloPeli());
+        holder.mediaPuntuaciones.setText(String.valueOf(o.getMediaValoraciones()));
+        holder.vecesPuntuado.setText(String.valueOf(o.getValoracionesTotales()));
 
-        if (holder.icon != null) {
-            new BitmapWorkerTask(holder.icon).execute(o.getCaratulaPeli());
+        if (holder.caratula != null) {
+            new BitmapWorkerTask(holder.caratula).execute(o.getCaratulaPeli());
         }
         return convertView;
     }
 
     class ViewHolder {
-        ImageView icon;
-        TextView text;
+        ImageView caratula;
+        TextView titulo;
+        TextView mediaPuntuaciones;
+        TextView vecesPuntuado;
     }
 
     // ----------------------------------------------------

@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class LoginActivity extends Activity {
     private EditText edtEmail;
-    private EditText edtPass;
+    private EditText edtContrasena;
     private Button btnLogin;
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
         loginActivity = this;
 
         edtEmail = (EditText) findViewById(R.id.edtEmail);
-        edtPass = (EditText) findViewById(R.id.edtPass);
+        edtContrasena = (EditText) findViewById(R.id.edtContrasena);
 
 
         btnLogin = (Button) findViewById(R.id.btnEnviar);
@@ -53,12 +53,12 @@ public class LoginActivity extends Activity {
                 /*ServiceLogin.accionLogin(edtEmail.getText().toString(), edtPass.getText().toString());*/
                 HashMap<String, String> parametros = new HashMap<String, String>();
                 // CLAVE------VALOR
-                parametros.put("ACTION", "User.login");
-                parametros.put("USER", edtEmail.getText().toString());
-                parametros.put("PASS", edtPass.getText().toString());
+                parametros.put("ACTION", "Usuario.login");
+                parametros.put("userMail", edtEmail.getText().toString());
+                parametros.put("contrasena", edtContrasena.getText().toString());
 
                 TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-                tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/AndroidAsynktaskBack/Controller");
+                tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
             }
         });
     }
@@ -88,7 +88,7 @@ public class LoginActivity extends Activity {
                 if (listaUsuarios != null && listaUsuarios.size() > 0) {
                     Usuario usuario = listaUsuarios.get(0);
 //                    Toast.makeText(LoginActivity.this, "Usuario Correcto!!" + "\nId=" + cliente.getIdUsuario() + "\nEmail=" + cliente.getEmail(), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, ListaOfertasActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, ListaPeliculasActivity.class);
                     intent.putExtra("usuario", usuario);
                     startActivity(intent);
                 } else {

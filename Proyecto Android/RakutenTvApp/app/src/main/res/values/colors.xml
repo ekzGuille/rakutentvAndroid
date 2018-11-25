@@ -5,6 +5,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="grisOscuro">#202020</color>
     <color name="grisClaro">#484848</color>
+    <color name="hueso">#CCD1D1</color>
     <color name="blanco">#FFFFFF</color>
     <color name="dorado">#F0BC13</color>
 </resources>
