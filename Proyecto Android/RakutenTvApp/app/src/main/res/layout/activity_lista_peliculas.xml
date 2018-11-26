@@ -35,8 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-
-                android:text="Bienvenido de nuevo "
                 android:textColor="@color/blanco"
                 android:textSize="15dp" />
 
@@ -51,6 +49,7 @@
                 android:textStyle="italic" />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,9 +58,6 @@
         android:paddingTop="5dp"
         android:paddingBottom="10dp">
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></Spinner>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,53 +65,62 @@
             android:gravity="right|center"
             android:orientation="horizontal">
 
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></Spinner>
 
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewPeliculas"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingBottom="60dp">
 
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:gravity="bottom"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-80dp"
+        android:background="@color/grisOscuro"
+        android:gravity="center"
         android:orientation="horizontal"
+        android:paddingLeft="30dp"
+        android:paddingTop="15dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="15dp"
         android:weightSum="3">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@color/grisClaro" />
+            android:id="@+id/btnPeliculas"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/reel_off" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@color/grisClaro" />
+            android:id="@+id/btnBuscar"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/lupa_off" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:background="@color/grisClaro" />
+            android:id="@+id/btnPefil"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/user_off"/>
 
     </LinearLayout>
 

@@ -19,6 +19,7 @@ public class Pelicula implements Serializable {
     private double precioPeli;
     private int valoracionesTotales;
     private double mediaValoraciones;
+    private String trailer;
 
 
     private final static String ID_PELICULA = "idPelicula";
@@ -31,6 +32,7 @@ public class Pelicula implements Serializable {
     private final static String PRECIO = "precioPeli";
     private final static String VALORACIONES_TOTALES = "valoracionesTotales";
     private final static String MEDIA_VALORACIONES = "mediaValoraciones";
+    private final static String TRAILER = "trailerPeli";
 
     public int getIdPelicula() {
         return idPelicula;
@@ -112,6 +114,14 @@ public class Pelicula implements Serializable {
         this.mediaValoraciones = mediaValoraciones;
     }
 
+    public String getTrailer() {
+        return trailer;
+    }
+
+    public void setTrailer(String trailer) {
+        this.trailer = trailer;
+    }
+
     public static ArrayList<Pelicula> getArrayListFromJSon(JSONArray datos) {
         ArrayList<Pelicula> lista = null;
         Pelicula pelicula = null;
@@ -133,6 +143,7 @@ public class Pelicula implements Serializable {
                 pelicula.setPrecioPeli(json_data.getDouble(PRECIO));
                 pelicula.setValoracionesTotales(json_data.getInt(VALORACIONES_TOTALES));
                 pelicula.setMediaValoraciones(json_data.getDouble(MEDIA_VALORACIONES));
+                pelicula.setTrailer(json_data.getString(TRAILER));
                 lista.add(pelicula);
             }
         } catch (JSONException e) {

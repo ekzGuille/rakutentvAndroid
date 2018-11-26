@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 
 import com.android.ermo.rakutentvapp.beans.Usuario;
+import com.android.ermo.rakutentvapp.datos.RakutenData;
 import com.android.ermo.rakutentvapp.tools.IPGetter;
 import com.android.ermo.rakutentvapp.tools.Post;
 
@@ -103,7 +104,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            String url = params[0];//http://localhost:8080/AndroidAsynktaskBack/Controller
+            String url = params[0];
             // Importantísimo la clase "POST":
             // Hacer una petición al servidor y recuperar la respuesta en JSON.
             Post post = new Post();
@@ -131,6 +132,7 @@ public class LoginActivity extends Activity {
                     }
 
                     Intent intent = new Intent(LoginActivity.this, ListaPeliculasActivity.class);
+                    RakutenData.setUsuario(usuario);
                     intent.putExtra("usuario", usuario);
                     startActivity(intent);
                 } else {

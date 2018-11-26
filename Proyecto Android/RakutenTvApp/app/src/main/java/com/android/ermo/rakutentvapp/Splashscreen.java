@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.android.ermo.rakutentvapp.adaptadores.RecyclerAdaptadorPeliculas;
 import com.android.ermo.rakutentvapp.beans.Pelicula;
 import com.android.ermo.rakutentvapp.beans.Usuario;
+import com.android.ermo.rakutentvapp.datos.RakutenData;
 import com.android.ermo.rakutentvapp.tools.IPGetter;
 import com.android.ermo.rakutentvapp.tools.Post;
 
@@ -86,7 +87,7 @@ public class Splashscreen extends AppCompatActivity {
             if (aBoolean) {
                 if (listaUsuarios != null && listaUsuarios.size() > 0) {
                     Usuario usuario = listaUsuarios.get(0);
-
+                    RakutenData.setUsuario(usuario);
                     Intent intent = new Intent(Splashscreen.this, ListaPeliculasActivity.class);
                     intent.putExtra("usuario", usuario);
                     startActivity(intent);

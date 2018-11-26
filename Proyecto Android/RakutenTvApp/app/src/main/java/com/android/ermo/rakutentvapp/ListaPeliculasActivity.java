@@ -22,6 +22,7 @@ import com.android.ermo.rakutentvapp.tools.IPGetter;
 import com.android.ermo.rakutentvapp.tools.Post;
 
 import org.json.JSONArray;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class ListaPeliculasActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView tx;
     private Button btnSalir;
+    private TextView textSaludo;
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
     private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieFotos/";
@@ -57,6 +59,7 @@ public class ListaPeliculasActivity extends AppCompatActivity {
 
         tx = (TextView) findViewById(R.id.textLoggedUser);
         btnSalir = (Button) findViewById(R.id.btnSalir);
+        textSaludo = (TextView) findViewById(R.id.textSaludo);
 
         btnSalir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +81,12 @@ public class ListaPeliculasActivity extends AppCompatActivity {
         if(getIntent().hasExtra("usuario")) {
             Usuario usuario = (Usuario) getIntent().getExtras().getSerializable("usuario");
 
+            textSaludo.setText("Bienvenido de nuevo ");
             tx.setText(" "+usuario.getUsername());
+        }else{
+            textSaludo.setText("Modo invitado");
         }
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewPeliculas);
 
         HashMap<String, String> parametros = new HashMap<String, String>();
