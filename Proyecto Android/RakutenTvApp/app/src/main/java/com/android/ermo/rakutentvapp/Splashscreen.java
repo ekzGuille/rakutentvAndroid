@@ -35,13 +35,17 @@ public class Splashscreen extends AppCompatActivity {
         String email = userPreferences.getString("email", "");
         String contrasena = userPreferences.getString("contrasena", "");
 
+        Intent intent = new Intent(this.getBaseContext(), ListaPeliculasActivity.class);
+        startActivity(intent);
 
-        if (userName.equals("") || email.equals("") || contrasena.equals("")) {
-            Intent intent = new Intent(this.getBaseContext(), LoginActivity.class);
-            startActivity(intent);
-        } else {
-            ejecutarEnvioLogin(userName, contrasena);
-        }
+        finish();
+
+//        if (userName.equals("") || email.equals("") || contrasena.equals("")) {
+//            Intent intent = new Intent(this.getBaseContext(), LoginActivity.class);
+//            startActivity(intent);
+//        } else {
+//            ejecutarEnvioLogin(userName, contrasena);
+//        }
 
     }
 

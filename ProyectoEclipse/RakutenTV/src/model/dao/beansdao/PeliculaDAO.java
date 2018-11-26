@@ -3,6 +3,7 @@ package model.dao.beansdao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,7 +194,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getDate(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));
@@ -234,7 +235,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getDate(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));
@@ -271,7 +272,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getDate(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));
@@ -308,7 +309,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getDate(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));
@@ -348,7 +349,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getDate(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));
@@ -388,7 +389,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getString(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));
@@ -428,7 +429,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getString(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));
@@ -468,7 +469,7 @@ public class PeliculaDAO implements DAO<Pelicula, Integer> {
 				pelicula.setTrailerPeli(rs.getString(4));
 				pelicula.setCaratulaPeli(rs.getString(5));
 				pelicula.setImagenPeli(rs.getString(6));
-				pelicula.setFechaEstreno(rs.getString(7));
+				pelicula.setFechaEstreno(new SimpleDateFormat("dd-MM-yyyy").format(rs.getString(7)));
 				pelicula.setAudiosDisponibles(rs.getString(8));
 				pelicula.setSubtitulosDisponibles(rs.getString(9));
 				pelicula.setDuracionPeli(rs.getInt(10));

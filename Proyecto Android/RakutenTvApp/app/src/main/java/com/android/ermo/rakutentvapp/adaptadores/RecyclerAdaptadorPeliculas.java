@@ -54,7 +54,7 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
                 RakutenData.setPeliculaSeleccionada(items.get(position));
                 Intent intent = new Intent(context,InfoPeliculaActivity.class);
                 intent.putExtra("pelicula",items.get(position));
-                context.startActivity(intent);
+                v.getContext().startActivity(intent);
             }
         });
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,7 +26,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ListaPeliculasActivity extends Activity {
+public class ListaPeliculasActivity extends AppCompatActivity {
     private ArrayList<Pelicula> m_pelis = new ArrayList<Pelicula>();
     private RecyclerAdaptadorPeliculas adaptadorPeliculas;
     private RecyclerView recyclerView;
@@ -33,7 +34,8 @@ public class ListaPeliculasActivity extends Activity {
     private Button btnSalir;
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
-    private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieCaratula/";
+    private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieFotos/";
+    private final String PATH_CARATULA = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieCaratula/";
 
     private static ListaPeliculasActivity listaPeliculasActivity = null;
     public static ListaPeliculasActivity getInstance() {
@@ -45,6 +47,13 @@ public class ListaPeliculasActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_peliculas);
         listaPeliculasActivity = this;
+
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle("Películas disponibles");
+
+
+        //CARGAR EL SPINNER CON LAS CATEGORIAS DE BD
+
 
         tx = (TextView) findViewById(R.id.textLoggedUser);
         btnSalir = (Button) findViewById(R.id.btnSalir);
@@ -131,7 +140,8 @@ public class ListaPeliculasActivity extends Activity {
             try {
                 if (resp && listaPeliculas != null && listaPeliculas.size() > 0) {
                     for (Pelicula pelicula : listaPeliculas) {
-                        pelicula.setCaratulaPeli(PATH_FOTO + pelicula.getCaratulaPeli());
+                        pelicula.setCaratulaPeli(PATH_CARATULA + pelicula.getCaratulaPeli());
+                        pelicula.setFotoPeli(PATH_FOTO + pelicula.getFotoPeli());
                     }
                     adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(),listaPeliculas);
                     recyclerView.setAdapter(adaptadorPeliculas);

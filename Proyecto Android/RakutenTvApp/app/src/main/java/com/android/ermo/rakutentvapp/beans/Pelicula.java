@@ -13,6 +13,7 @@ public class Pelicula implements Serializable {
     private String tituloPeli;
     private String resumenPeli;
     private String caratulaPeli;
+    private String fotoPeli;
     private String fechaEstreno;
     private int duracionPeli;
     private double precioPeli;
@@ -23,7 +24,8 @@ public class Pelicula implements Serializable {
     private final static String ID_PELICULA = "idPelicula";
     private final static String TITULO = "tituloPeli";
     private final static String RESUMEN = "resumenPeli";
-    private final static String FOTO = "caratulaPeli";
+    private final static String CARATULA = "caratulaPeli";
+    private final static String FOTO = "imagenPeli";
     private final static String FECHA = "fechaEstreno";
     private final static String DURACION = "duracionPeli";
     private final static String PRECIO = "precioPeli";
@@ -60,6 +62,14 @@ public class Pelicula implements Serializable {
 
     public void setCaratulaPeli(String caratulaPeli) {
         this.caratulaPeli = caratulaPeli;
+    }
+
+    public String getFotoPeli() {
+        return fotoPeli;
+    }
+
+    public void setFotoPeli(String fotoPeli) {
+        this.fotoPeli = fotoPeli;
     }
 
     public String getFechaEstreno() {
@@ -116,7 +126,8 @@ public class Pelicula implements Serializable {
                 pelicula.setTituloPeli(
                         json_data.getString(TITULO));
                 pelicula.setResumenPeli(json_data.getString(RESUMEN));
-                pelicula.setCaratulaPeli(json_data.getString(FOTO));
+                pelicula.setCaratulaPeli(json_data.getString(CARATULA));
+                pelicula.setFotoPeli(json_data.getString(FOTO));
                 pelicula.setFechaEstreno(json_data.getString(FECHA));
                 pelicula.setDuracionPeli(json_data.getInt(DURACION));
                 pelicula.setPrecioPeli(json_data.getDouble(PRECIO));

@@ -121,7 +121,7 @@ public class Post {
                 }
                 is.close();
                 respuesta = sb.toString();
-                jArray = new JSONArray(respuesta);
+                jArray = new JSONArray(new String(respuesta.getBytes("ISO-8859-1"),"UTF-8"));
             }
         } catch (Exception e) {
             Log.e("log_tag", "Error converting result " + e.toString());
