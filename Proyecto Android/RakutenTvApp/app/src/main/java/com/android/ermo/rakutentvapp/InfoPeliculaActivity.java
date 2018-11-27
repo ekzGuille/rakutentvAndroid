@@ -101,10 +101,10 @@ public class InfoPeliculaActivity extends AppCompatActivity {
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                     HashMap<String, String> parametros = new HashMap<String, String>();
-                    parametros.put("ACTION", "Pelicula.puntuar");
-                    parametros.put("usuario", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
-                    parametros.put("pelicula", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
-                    parametros.put("puntuacion", String.valueOf(rating));
+                    parametros.put("ACTION", "Puntuar.addPuntuacion");
+                    parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
+                    parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
+                    parametros.put("PUNTUACION", String.valueOf(rating));
                     //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
                     //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
@@ -143,9 +143,9 @@ public class InfoPeliculaActivity extends AppCompatActivity {
 
                 if (RakutenData.getUsuario() != null) {
                     HashMap<String, String> parametros = new HashMap<String, String>();
-                    parametros.put("ACTION", "Pelicula.marcarFavorito");
-                    parametros.put("usuario", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
-                    parametros.put("pelicula", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
+                    parametros.put("ACTION", "MarcarFav.marcarFavorito");
+                    parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
+                    parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
                     //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
                     //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
@@ -166,9 +166,9 @@ public class InfoPeliculaActivity extends AppCompatActivity {
 
                 if (RakutenData.getUsuario() != null) {
                     HashMap<String, String> parametros = new HashMap<String, String>();
-                    parametros.put("ACTION", "Pelicula.quitarFavorito");
-                    parametros.put("usuario", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
-                    parametros.put("pelicula", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
+                    parametros.put("ACTION", "MarcarFav.quitarFavorito");
+                    parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
+                    parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
                     //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
                     //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
@@ -200,9 +200,9 @@ public class InfoPeliculaActivity extends AppCompatActivity {
 
                 if (RakutenData.getUsuario() != null) {
                     HashMap<String, String> parametros = new HashMap<String, String>();
-                    parametros.put("ACTION", "Pelicula.comprar");
-                    parametros.put("usuario", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
-                    parametros.put("pelicula", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
+                    parametros.put("ACTION", "Comprar.comprar");
+                    parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
+                    parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
                     //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
                     //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
