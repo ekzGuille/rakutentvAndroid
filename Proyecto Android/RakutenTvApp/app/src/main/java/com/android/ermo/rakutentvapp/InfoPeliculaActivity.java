@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.ermo.rakutentvapp.beans.Pelicula;
+import com.android.ermo.rakutentvapp.beans.Respuesta;
 import com.android.ermo.rakutentvapp.beans.Usuario;
 import com.android.ermo.rakutentvapp.datos.RakutenData;
 import com.android.ermo.rakutentvapp.tools.IPGetter;
@@ -29,6 +30,7 @@ import com.bumptech.glide.request.transition.Transition;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InfoPeliculaActivity extends AppCompatActivity {
@@ -104,9 +106,10 @@ public class InfoPeliculaActivity extends AppCompatActivity {
                     parametros.put("ACTION", "Puntuar.addPuntuacion");
                     parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
                     parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
-                    parametros.put("PUNTUACION", String.valueOf(rating));
-                    //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-                    //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+                    parametros.put("PUNTUACION", String.valueOf((int)(rating)));
+
+                    TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+                    tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
                     //Hacerlo en el onPostExecute
                     Toast.makeText(getBaseContext(), "Votación realizada", Toast.LENGTH_SHORT).show();
@@ -146,8 +149,8 @@ public class InfoPeliculaActivity extends AppCompatActivity {
                     parametros.put("ACTION", "MarcarFav.marcarFavorito");
                     parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
                     parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
-                    //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-                    //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+                    TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+                    tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
                     //Hacerlo en el onPostExecute
                     Toast.makeText(getBaseContext(), "Pelicula añadida a favoritos", Toast.LENGTH_SHORT).show();
@@ -169,8 +172,8 @@ public class InfoPeliculaActivity extends AppCompatActivity {
                     parametros.put("ACTION", "MarcarFav.quitarFavorito");
                     parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
                     parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
-                    //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-                    //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+                    TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+                    tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
                     //Hacerlo en el onPostExecute
                     Toast.makeText(getBaseContext(), "Pelicula retirada de favoritos", Toast.LENGTH_SHORT).show();
@@ -203,8 +206,9 @@ public class InfoPeliculaActivity extends AppCompatActivity {
                     parametros.put("ACTION", "Comprar.comprar");
                     parametros.put("ID_USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
                     parametros.put("ID_PELICULA", String.valueOf(RakutenData.getPeliculaSeleccionada().getIdPelicula()));
-                    //TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-                    //tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+                    parametros.put("PRECIO", String.valueOf(RakutenData.getPeliculaSeleccionada().getPrecioPeli()));
+                    TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+                    tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
                     //Hacerlo en el onPostExecute
                     Toast.makeText(getBaseContext(), "Pelicula comprarda", Toast.LENGTH_SHORT).show();
@@ -219,6 +223,7 @@ public class InfoPeliculaActivity extends AppCompatActivity {
 
     class TareaSegundoPlano extends AsyncTask<String, Integer, Boolean> {
         private HashMap<String, String> parametros;
+        private ArrayList<Respuesta> lstResp = null;
 
         public TareaSegundoPlano(HashMap<String, String> parametros) {
             this.parametros = parametros;
@@ -231,14 +236,53 @@ public class InfoPeliculaActivity extends AppCompatActivity {
             // Hacer una petición al servidor y recuperar la respuesta en JSON.
             Post post = new Post();
             JSONArray result = post.getServerDataPost(parametros, url);
+            lstResp = Respuesta.getArrayListFromJSon(result);
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (aBoolean) {
-                Toast.makeText(getBaseContext(), "Votación realizada", Toast.LENGTH_SHORT).show();
+            if (aBoolean && lstResp != null && lstResp.size() > 0) {
+                Respuesta respuesta = lstResp.get(0);
+
+                if(respuesta.getDescRespuesta().equals("addPuntuacion")){
+                    if(respuesta.getRespuesta() == 1){
+                        Toast.makeText(getBaseContext(), "Votación realizada", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getBaseContext(), "No se ha podido realizar la puntuación", Toast.LENGTH_SHORT).show();
+                    }
+                }else if (respuesta.getDescRespuesta().equals("modPuntuacion")){
+                    if(respuesta.getRespuesta() == 1){
+                        Toast.makeText(getBaseContext(), "Votación actualizada", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getBaseContext(), "No se ha podido actualizar la puntuación", Toast.LENGTH_SHORT).show();
+                    }
+                }else if(respuesta.getDescRespuesta().equals("addFavorito")){
+                    if(respuesta.getRespuesta() == 1){
+                        Toast.makeText(getBaseContext(), "Añadida a favoritos", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getBaseContext(), "No se ha podido añadir a favoritos", Toast.LENGTH_SHORT).show();
+                    }
+                }else if (respuesta.getDescRespuesta().equals("remFavorito")){
+                    if(respuesta.getRespuesta() == 1){
+                        Toast.makeText(getBaseContext(), "Quitado de favoritos", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getBaseContext(), "No se ha podido quitar de favoritos", Toast.LENGTH_SHORT).show();
+                    }
+                }else if(respuesta.getDescRespuesta().equals("addCompra")){
+                    if(respuesta.getRespuesta() == 1){
+                        Toast.makeText(getBaseContext(), "Pelicula comprada", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getBaseContext(), "No se ha podido comprar la pelicula", Toast.LENGTH_SHORT).show();
+                    }
+                }else if (respuesta.getDescRespuesta().equals("yaCompra")){
+                    if(respuesta.getRespuesta() == 1){
+                        Toast.makeText(getBaseContext(), "La pelicula ya está comprada", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getBaseContext(), "La pelicula ya está comprada", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
     }

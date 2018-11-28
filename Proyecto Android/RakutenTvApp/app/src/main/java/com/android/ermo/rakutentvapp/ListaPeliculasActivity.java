@@ -102,7 +102,7 @@ public class ListaPeliculasActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewPeliculas);
 
         HashMap<String, String> parametros = new HashMap<String, String>();
-        parametros.put("ACTION", "Pelicula.listAll");
+        parametros.put("ACTION", "Pelicula.listAllMejorVotadas");
 
         TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
         tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");

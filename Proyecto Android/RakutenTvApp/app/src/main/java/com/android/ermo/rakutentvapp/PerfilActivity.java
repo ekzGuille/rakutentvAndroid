@@ -168,16 +168,10 @@ public class PerfilActivity extends AppCompatActivity {
         valoresSpinner.add("Mis votadas");
 
         ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinner) {
-//            @Override
-//            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//                return super.getDropDownView(position + 1, convertView, parent);
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return valoresSpinner.size() - 1;
-//
-//            }
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
         };
         spinnerPerfil.setAdapter(spAdapter);
     }

@@ -45,6 +45,8 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
         holder.titulo.setText(pelicula.getTituloPeli());
         holder.mediaPuntuaciones.setText(String.valueOf(pelicula.getMediaValoraciones()));
         holder.vecesPuntuado.setText(String.valueOf(pelicula.getValoracionesTotales()));
+        holder.precio.setText(String.valueOf(pelicula.getPrecioPeli()) + " €");
+        holder.anio.setText("(" + pelicula.getFechaEstreno().substring(pelicula.getFechaEstreno().length() - 4, pelicula.getFechaEstreno().length()) + ")");
 
         Glide.with(context).asBitmap().load(pelicula.getCaratulaPeli()).into(holder.caratula);
 
@@ -71,6 +73,8 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
         TextView titulo;
         TextView mediaPuntuaciones;
         TextView vecesPuntuado;
+        TextView precio;
+        TextView anio;
         LinearLayout lineaerLayoutPadre;
 
         public RecyclerViewHolder(View itemView) {
@@ -79,6 +83,8 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
             titulo = itemView.findViewById(R.id.titulo);
             mediaPuntuaciones = itemView.findViewById(R.id.mediaPuntuaciones);
             vecesPuntuado = itemView.findViewById(R.id.vecesPuntuado);
+            precio = itemView.findViewById(R.id.precio);
+            anio = itemView.findViewById(R.id.anio);
             lineaerLayoutPadre = itemView.findViewById(R.id.linearLayoutPadre);
         }
     }

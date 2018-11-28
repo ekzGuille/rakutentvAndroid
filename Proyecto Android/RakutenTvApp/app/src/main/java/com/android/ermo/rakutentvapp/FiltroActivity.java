@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,16 +47,19 @@ public class FiltroActivity extends AppCompatActivity {
     private Button btnPeliculas;
     private Button btnBuscar;
     private Button btnPerfil;
-    private Spinner spinnerBusqueda;
-    private Spinner spinnerGenero;
+    private Spinner spinnerBusquedaPri;
+    private Spinner spinnerBusquedaSec;
     private TextView searchBar;
     private TextView tx;
     private TextView textSaludo;
+    private LinearLayout layoutSearch;
+    private Button hacerBusqueda;
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
     private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieFotos/";
     private final String PATH_CARATULA = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieCaratula/";
 
+    private int buscandoPor = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +71,11 @@ public class FiltroActivity extends AppCompatActivity {
         btnPeliculas = (Button) findViewById(R.id.btnPeliculas);
         btnBuscar = (Button) findViewById(R.id.btnBuscar);
         btnPerfil = (Button) findViewById(R.id.btnPerfil);
+        layoutSearch = (LinearLayout) findViewById(R.id.layoutSearch);
+        hacerBusqueda = (Button) findViewById(R.id.hacerBusqueda);
 
-
-        spinnerBusqueda = (Spinner) findViewById(R.id.spinnerBusqueda);
-        spinnerGenero = (Spinner) findViewById(R.id.spinnerGenero);
+        spinnerBusquedaPri = (Spinner) findViewById(R.id.spinnerBusquedaPri);
+        spinnerBusquedaSec = (Spinner) findViewById(R.id.spinnerBusquedaSec);
 
         searchBar = (TextView) findViewById(R.id.searchBar);
 
@@ -78,7 +83,7 @@ public class FiltroActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Busca tu pelicula");
 
-        cargarSpinners();
+        cargarGlobalSpinner();
 
 
         if (getIntent().hasExtra("usuario") || RakutenData.getUsuario() != null) {
@@ -96,15 +101,21 @@ public class FiltroActivity extends AppCompatActivity {
             textSaludo.setText("Modo invitado");
         }
 
-        spinnerBusqueda.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerBusquedaPri.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1) {
-                    searchBar.setVisibility(View.VISIBLE);
-                    spinnerGenero.setVisibility(View.GONE);
+                if (position == 0) {
+                    //Default
+                    spinnerBusquedaSec.setVisibility(View.GONE);
+                } else if (position == 1) {
+                    //Titulo
+                    layoutSearch.setVisibility(View.VISIBLE);
+                    spinnerBusquedaSec.setVisibility(View.GONE);
                 } else {
-                    spinnerGenero.setVisibility(View.VISIBLE);
-                    searchBar.setVisibility(View.GONE);
+                    //Resto (Spinners)
+                    layoutSearch.setVisibility(View.GONE);
+                    inflateSpinner(position);
+                    spinnerBusquedaSec.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -114,29 +125,37 @@ public class FiltroActivity extends AppCompatActivity {
             }
         });
 
-        searchBar.addTextChangedListener(new TextWatcher() {
+        hacerBusqueda.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.d("", "afterTextChanged: " + s.toString());
-//                cargarPeliculas(s.toString());
+            public void onClick(View v) {
+                if (searchBar.getText() != null || !searchBar.getText().equals("")) {
+                    buscarTitulo(searchBar.getText().toString());
+                }
             }
         });
 
-
-        spinnerGenero.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerBusquedaSec.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    cargarPeliculas(position);
+                    switch (buscandoPor) {
+                        case 1:
+                            buscarGenero(position);
+                            break;
+
+                        case 2:
+                            buscarVotos(position);
+                            break;
+                        case 3:
+                            buscarFecha(position);
+                            break;
+                        case 4:
+                            buscarAlfTitulo(position);
+                            break;
+                        case 5:
+                            buscarPrecio(position);
+                            break;
+                    }
                 }
             }
 
@@ -163,8 +182,6 @@ public class FiltroActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-//        searchBar
 
     }
 
@@ -224,52 +241,117 @@ public class FiltroActivity extends AppCompatActivity {
         return true;
     }
 
-    private void cargarSpinners() {
+    private void cargarGlobalSpinner() {
         final List<String> valoresSpinnerBuscar = new ArrayList<String>();
         valoresSpinnerBuscar.add("Selecciona el tipo de busqueda");
         valoresSpinnerBuscar.add("Buscar por titulo");
         valoresSpinnerBuscar.add("Buscar por géneros");
+        valoresSpinnerBuscar.add("Buscar por votos");
+        valoresSpinnerBuscar.add("Ordenar por estreno");
+        valoresSpinnerBuscar.add("Ordenar por titulo");
+        valoresSpinnerBuscar.add("Ordenar por precio");
 
         ArrayAdapter<String> spAdapterB = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerBuscar) {
-//            @Override
-//            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//                return super.getDropDownView(position + 1, convertView, parent);
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return valoresSpinnerBuscar.size() - 1;
-//
-//            }
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
         };
-        spinnerBusqueda.setAdapter(spAdapterB);
-
-        final List<String> valoresSpinnerGenero = new ArrayList<String>();
-        valoresSpinnerGenero.add("Selecciona un genero");
-        valoresSpinnerGenero.add("Acción");
-        valoresSpinnerGenero.add("Animación");
-        valoresSpinnerGenero.add("Ciencia Ficción");
-        valoresSpinnerGenero.add("Cine Español");
-        valoresSpinnerGenero.add("Comedia");
-        valoresSpinnerGenero.add("Thriller");
-        valoresSpinnerGenero.add("Romántico");
-
-        ArrayAdapter<String> spAdapterG = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerGenero) {
-//            @Override
-//            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//                return super.getDropDownView(position + 1, convertView, parent);
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return valoresSpinnerGenero.size() - 1;
-//
-//            }
-        };
-        spinnerGenero.setAdapter(spAdapterG);
+        spinnerBusquedaPri.setAdapter(spAdapterB);
     }
 
-    private void cargarPeliculas(int position) {
+    private void inflateSpinner(int position) {
+
+        switch (position) {
+            case 2:
+                buscandoPor = 1;
+                final List<String> valoresSpinnerGenero = new ArrayList<String>();
+                valoresSpinnerGenero.add("Selecciona un genero");
+                valoresSpinnerGenero.add("Acción");
+                valoresSpinnerGenero.add("Animación");
+                valoresSpinnerGenero.add("Ciencia Ficción");
+                valoresSpinnerGenero.add("Cine Español");
+                valoresSpinnerGenero.add("Comedia");
+                valoresSpinnerGenero.add("Thriller");
+                valoresSpinnerGenero.add("Romántico");
+
+                ArrayAdapter<String> spAdapterG = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerGenero) {
+                    @Override
+                    public boolean isEnabled(int position) {
+                        return position != 0;
+                    }
+                };
+                spinnerBusquedaSec.setAdapter(spAdapterG);
+                break;
+
+
+            case 3:
+                buscandoPor = 2;
+                final List<String> valoresSpinnerVotos = new ArrayList<String>();
+                valoresSpinnerVotos.add("Selecciona el tipo de búsqueda");
+                valoresSpinnerVotos.add("Más cantidad de votos");
+                valoresSpinnerVotos.add("Más votadas");
+
+                ArrayAdapter<String> spAdapterV = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerVotos) {
+                    @Override
+                    public boolean isEnabled(int position) {
+                        return position != 0;
+                    }
+                };
+                spinnerBusquedaSec.setAdapter(spAdapterV);
+                break;
+            case 4:
+                buscandoPor = 3;
+                final List<String> valoresSpinnerFecha = new ArrayList<String>();
+                valoresSpinnerFecha.add("Selecciona el tipo de búsqueda");
+                valoresSpinnerFecha.add("Más recientes");
+                valoresSpinnerFecha.add("Más antiguas");
+
+                ArrayAdapter<String> spAdapterF = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerFecha) {
+                    @Override
+                    public boolean isEnabled(int position) {
+                        return position != 0;
+                    }
+                };
+                spinnerBusquedaSec.setAdapter(spAdapterF);
+                break;
+
+            case 5:
+                buscandoPor = 4;
+                final List<String> valoresSpinnerTitulo = new ArrayList<String>();
+                valoresSpinnerTitulo.add("Selecciona el tipo de búsqueda");
+                valoresSpinnerTitulo.add("Ascendente A-Z");
+                valoresSpinnerTitulo.add("Descendente Z-A");
+
+                ArrayAdapter<String> spAdapterT = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerTitulo) {
+                    @Override
+                    public boolean isEnabled(int position) {
+                        return position != 0;
+                    }
+                };
+                spinnerBusquedaSec.setAdapter(spAdapterT);
+                break;
+
+            case 6:
+                buscandoPor = 5;
+                final List<String> valoresSpinnerPrecio = new ArrayList<String>();
+                valoresSpinnerPrecio.add("Selecciona el tipo de búsqueda");
+                valoresSpinnerPrecio.add("Más caras");
+                valoresSpinnerPrecio.add("Más baratas");
+
+                ArrayAdapter<String> spAdapterP = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerPrecio) {
+                    @Override
+                    public boolean isEnabled(int position) {
+                        return position != 0;
+                    }
+                };
+                spinnerBusquedaSec.setAdapter(spAdapterP);
+                break;
+        }
+
+    }
+
+    private void buscarGenero(int position) {
 
         HashMap<String, String> parametros = new HashMap<String, String>();
 
@@ -281,11 +363,71 @@ public class FiltroActivity extends AppCompatActivity {
 
     }
 
-    private void cargarPeliculas(String texto) {
+    private void buscarVotos(int position) {
 
         HashMap<String, String> parametros = new HashMap<String, String>();
 
-        parametros.put("ACTION", "Pelicula.listGenero");
+        if (position == 1) {
+            parametros.put("ACTION", "Pelicula.listAllMejorVotadas");
+        } else if (position == 2) {
+            parametros.put("ACTION", "Pelicula.listAllMasVotadas");
+        }
+
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+
+    }
+
+    private void buscarFecha(int position) {
+
+        HashMap<String, String> parametros = new HashMap<String, String>();
+
+        if (position == 1) {
+            parametros.put("ACTION", "Pelicula.listAllEstrenosNuevas");
+        } else if (position == 2) {
+            parametros.put("ACTION", "Pelicula.listAllEstrenosViejas");
+        }
+
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+
+    }
+
+    private void buscarAlfTitulo(int position) {
+
+        HashMap<String, String> parametros = new HashMap<String, String>();
+
+        if (position == 1) {
+            parametros.put("ACTION", "Pelicula.listTitulosAZ");
+        } else if (position == 2) {
+            parametros.put("ACTION", "Pelicula.listTitulosZA");
+        }
+
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+
+    }
+
+    private void buscarPrecio(int position) {
+
+        HashMap<String, String> parametros = new HashMap<String, String>();
+
+        if (position == 1) {
+            parametros.put("ACTION", "Pelicula.listAllCaras");
+        } else if (position == 2) {
+            parametros.put("ACTION", "Pelicula.listAllBaratas");
+        }
+
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+
+    }
+
+    private void buscarTitulo(String texto) {
+
+        HashMap<String, String> parametros = new HashMap<String, String>();
+
+        parametros.put("ACTION", "Pelicula.filtrarNombre");
         parametros.put("NOMBRE", texto);
 
         TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
@@ -341,11 +483,7 @@ public class FiltroActivity extends AppCompatActivity {
                     recyclerView.setAdapter(adaptadorPeliculas);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                 } else {
-                    if (listaPeliculas.size() == 0) {
-                        Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "No se han encontrado peliculas. ", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "Lista incorrecta. ", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "No se han encontrado peliculas. ", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 // TODO: handle exception

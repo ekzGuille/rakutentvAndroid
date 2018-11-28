@@ -59,7 +59,7 @@
             android:paddingRight="50dp">
 
             <Spinner
-                android:id="@+id/spinnerBusqueda"
+                android:id="@+id/spinnerBusquedaPri"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/hueso"></Spinner>
@@ -69,6 +69,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <LinearLayout
+                    android:id="@+id/layoutSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                 <EditText
                     android:id="@+id/searchBar"
                     android:layout_width="match_parent"
@@ -81,14 +86,20 @@
                     android:hint="Introduce el titulo"
                     android:inputType="text"
                     android:textColor="@color/blanco"
-                    android:textColorHint="@color/dorado"
-                    android:visibility="gone" />
+                    android:textColorHint="@color/dorado" />
 
+                    <Button
+                        android:id="@+id/hacerBusqueda"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/buscar"/>
+                </LinearLayout>
                 <Spinner
-                    android:id="@+id/spinnerGenero"
+                    android:id="@+id/spinnerBusquedaSec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/hueso"></Spinner>
+                    android:backgroundTint="@color/hueso"
+                    android:visibility="gone"></Spinner>
             </LinearLayout>
 
         </LinearLayout>
