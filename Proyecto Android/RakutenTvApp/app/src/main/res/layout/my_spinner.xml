@@ -6,7 +6,7 @@
     android:text="prueba"
     android:padding="15dp"
     android:textSize="18dp"
-    android:background="@color/grisClaro"
-    android:textColor="@color/blanco">
+    android:background="@color/grisOscuro"
+    android:textColor="@color/hueso">
 
 </TextView>

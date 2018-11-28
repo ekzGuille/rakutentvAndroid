@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.android.ermo.rakutentvapp.adaptadores.RecyclerAdaptadorPeliculas;
 import com.android.ermo.rakutentvapp.beans.Pelicula;
 import com.android.ermo.rakutentvapp.beans.Usuario;
+import com.android.ermo.rakutentvapp.datos.RakutenData;
 import com.android.ermo.rakutentvapp.tools.IPGetter;
 import com.android.ermo.rakutentvapp.tools.Post;
 
@@ -47,6 +48,7 @@ public class ListaPeliculasActivity extends AppCompatActivity {
     private final String PATH_CARATULA = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieCaratula/";
 
     private static ListaPeliculasActivity listaPeliculasActivity = null;
+
     public static ListaPeliculasActivity getInstance() {
         return listaPeliculasActivity;
     }
@@ -82,13 +84,18 @@ public class ListaPeliculasActivity extends AppCompatActivity {
         });
 
 
-        if(getIntent().hasExtra("usuario")) {
-            Usuario usuario = (Usuario) getIntent().getExtras().getSerializable("usuario");
+        if (getIntent().hasExtra("usuario") || RakutenData.getUsuario() != null) {
+            Usuario usuario = null;
+            if (getIntent().hasExtra("usuario")) {
+                usuario = (Usuario) getIntent().getExtras().getSerializable("usuario");
+            } else if (RakutenData.getUsuario() != null) {
+                usuario = RakutenData.getUsuario();
+            }
 
             textSaludo.setText("Bienvenido de nuevo ");
-            tx.setText(" "+usuario.getUsername());
+            tx.setText(" " + usuario.getUsername());
 
-        }else{
+        } else {
             textSaludo.setText("Modo invitado");
         }
 
@@ -110,7 +117,7 @@ public class ListaPeliculasActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
         finish();
@@ -159,7 +166,7 @@ public class ListaPeliculasActivity extends AppCompatActivity {
                         pelicula.setCaratulaPeli(PATH_CARATULA + pelicula.getCaratulaPeli());
                         pelicula.setFotoPeli(PATH_FOTO + pelicula.getFotoPeli());
                     }
-                    adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(),listaPeliculas);
+                    adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
                     recyclerView.setAdapter(adaptadorPeliculas);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                 } else {
@@ -177,10 +184,10 @@ public class ListaPeliculasActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar_menu, menu);
 
-        if(getIntent().hasExtra("usuario")) {
+        if (getIntent().hasExtra("usuario")) {
             menu.findItem(R.id.entrar).setVisible(false);
             menu.findItem(R.id.salir).setVisible(true);
-        }else{
+        } else {
             menu.findItem(R.id.entrar).setVisible(true);
             menu.findItem(R.id.salir).setVisible(false);
         }
@@ -190,12 +197,12 @@ public class ListaPeliculasActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.entrar:
-
-
             case R.id.salir:
+
+                RakutenData.setUsuario(null);
 
                 SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = userPreferences.edit();

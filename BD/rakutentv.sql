@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 27-11-2018 a las 00:00:25
+-- Tiempo de generación: 28-11-2018 a las 08:17:47
 -- Versión del servidor: 10.1.31-MariaDB
 -- Versión de PHP: 7.2.3
 
@@ -81,6 +81,15 @@ CREATE TABLE `compra` (
   `precioCompra` decimal(10,2) NOT NULL,
   `fechaCompra` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `compra`
+--
+
+INSERT INTO `compra` (`idCompra`, `idUsuario`, `idPelicula`, `precioCompra`, `fechaCompra`) VALUES
+(1, 3, 13, '4.50', '2018-11-27 08:21:54'),
+(2, 3, 7, '2.00', '2018-11-27 19:53:12'),
+(3, 3, 6, '4.00', '2018-11-27 19:55:51');
 
 -- --------------------------------------------------------
 
@@ -186,7 +195,9 @@ CREATE TABLE `marcarfavorito` (
 INSERT INTO `marcarfavorito` (`idMarcarFavorito`, `idPelicula`, `idUsuario`) VALUES
 (1, 7, 3),
 (2, 15, 3),
-(3, 12, 2);
+(3, 12, 2),
+(4, 3, 1),
+(5, 6, 2);
 
 -- --------------------------------------------------------
 
@@ -344,7 +355,9 @@ INSERT INTO `tenergenero` (`idTenerGenero`, `idGenero`, `idPelicula`) VALUES
 (1, 1, 2),
 (2, 1, 1),
 (3, 4, 8),
-(4, 7, 19);
+(4, 7, 19),
+(5, 5, 2),
+(6, 3, 6);
 
 -- --------------------------------------------------------
 
@@ -525,7 +538,7 @@ ALTER TABLE `comentario`
 -- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `idCompra` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `director`
@@ -555,7 +568,7 @@ ALTER TABLE `infopuntuacion`
 -- AUTO_INCREMENT de la tabla `marcarfavorito`
 --
 ALTER TABLE `marcarfavorito`
-  MODIFY `idMarcarFavorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idMarcarFavorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `metodopago`
@@ -591,7 +604,7 @@ ALTER TABLE `tenerdirector`
 -- AUTO_INCREMENT de la tabla `tenergenero`
 --
 ALTER TABLE `tenergenero`
-  MODIFY `idTenerGenero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idTenerGenero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

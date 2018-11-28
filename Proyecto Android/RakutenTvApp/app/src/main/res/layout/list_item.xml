@@ -5,7 +5,7 @@
     android:id="@+id/linearLayoutPadre"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grisOscuro"
+    android:background="@drawable/bg_btn_menu"
     android:orientation="horizontal">
 
     <ImageView

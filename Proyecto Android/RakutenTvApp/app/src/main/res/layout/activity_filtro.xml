@@ -15,53 +15,17 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="right|center"
             android:orientation="horizontal"
             android:weightSum="100">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp">
-
-                <Spinner
-                    android:id="@+id/spinnerBusqueda"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"></Spinner>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/searchBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="40"
-                        android:backgroundTint="@color/dorado"
-                        android:cursorVisible="true"
-                        android:ems="10"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/blanco"
-                        android:visibility="gone"/>
-                    <Spinner
-                        android:id="@+id/spinnerGenero"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"></Spinner>
-                </LinearLayout>
-
-
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/textSaludo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
                 android:layout_weight="20"
+                android:gravity="right"
                 android:textColor="@color/blanco"
                 android:textSize="15dp" />
 
@@ -70,12 +34,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:gravity="right"
                 android:layout_weight="20"
+                android:gravity="right"
                 android:textColor="@color/dorado"
                 android:textSize="15dp"
                 android:textStyle="italic" />
-
 
         </LinearLayout>
     </LinearLayout>
@@ -83,29 +46,80 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="100">
+        android:gravity="right|center"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp">
+
+            <Spinner
+                android:id="@+id/spinnerBusqueda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/hueso"></Spinner>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/searchBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:backgroundTint="@color/dorado"
+                    android:cursorVisible="true"
+                    android:ems="10"
+                    android:paddingLeft="10dp"
+                    android:hint="Introduce el titulo"
+                    android:inputType="text"
+                    android:textColor="@color/blanco"
+                    android:textColorHint="@color/dorado"
+                    android:visibility="gone" />
+
+                <Spinner
+                    android:id="@+id/spinnerGenero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/hueso"></Spinner>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="100"
+        android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewPeliculas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="99"
-            >
+            android:layout_weight="99">
 
         </android.support.v7.widget.RecyclerView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/bg_btn_menu"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
             android:paddingLeft="30dp"
+            android:paddingTop="15dp"
             android:paddingRight="30dp"
-            android:layout_weight="1">
+            android:paddingBottom="15dp">
 
             <Button
                 android:id="@+id/btnPeliculas"
@@ -131,6 +145,4 @@
 
         </LinearLayout>
     </LinearLayout>
-
-
 </LinearLayout>

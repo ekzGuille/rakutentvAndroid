@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -96,8 +99,8 @@ public class PerfilActivity extends AppCompatActivity {
                     finish();
                 }
             });
-        }else{
-            Toast.makeText(getBaseContext(), "Loggeate para poder acceder a tu perfil",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getBaseContext(), "Loggeate para poder acceder a tu perfil", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -106,7 +109,7 @@ public class PerfilActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
         finish();
@@ -117,7 +120,7 @@ public class PerfilActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar_menu, menu);
 
-        if (getIntent().hasExtra("usuario")) {
+        if (getIntent().hasExtra("usuario") || RakutenData.getUsuario() != null) {
             menu.findItem(R.id.entrar).setVisible(false);
             menu.findItem(R.id.salir).setVisible(true);
         } else {
@@ -130,13 +133,12 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-
         switch (item.getItemId()) {
 
             case R.id.entrar:
-
-
             case R.id.salir:
+
+                RakutenData.setUsuario(null);
 
                 SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = userPreferences.edit();
@@ -159,44 +161,59 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void cargarSpinner() {
-        List<String> valoresSpinner = new ArrayList<String>();
-        valoresSpinner.add("Peliculas favoritas");
-        valoresSpinner.add("Peliculas compradas");
-        valoresSpinner.add("Peliculas votadas");
+        final List<String> valoresSpinner = new ArrayList<String>();
+        valoresSpinner.add("Que películas buscas?");
+        valoresSpinner.add("Mis favoritas");
+        valoresSpinner.add("Mis compradas");
+        valoresSpinner.add("Mis votadas");
 
-        ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this,R.layout.my_spinner,valoresSpinner);
+        ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinner) {
+//            @Override
+//            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//                return super.getDropDownView(position + 1, convertView, parent);
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return valoresSpinner.size() - 1;
+//
+//            }
+        };
         spinnerPerfil.setAdapter(spAdapter);
     }
 
-    private void cargarPeliculas(int position){
+    private void cargarPeliculas(int position) {
 
         HashMap<String, String> parametros = new HashMap<String, String>();
 
-        final int PELICULAS_FAVORITAS = 0;
-        final int PELICULAS_COMPRADAS = 1;
-        final int PELICULAS_VOTADAS = 2;
+        final int PELICULAS_FAVORITAS = 1;
+        final int PELICULAS_COMPRADAS = 2;
+        final int PELICULAS_VOTADAS = 3;
 
-        switch (position){
+        switch (position) {
             case PELICULAS_FAVORITAS:
-                parametros.put("ACTION", "Pelicula.listAll");
+                parametros.put("ACTION", "Pelicula.listFavoritas");
+                parametros.put("USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
 
                 break;
 
 
             case PELICULAS_COMPRADAS:
-                parametros.put("ACTION", "Pelicula.listAll");
+                parametros.put("ACTION", "Pelicula.listCompradas");
+                parametros.put("USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
 
                 break;
 
 
             case PELICULAS_VOTADAS:
-                parametros.put("ACTION", "Pelicula.listAll");
+                parametros.put("ACTION", "Pelicula.listPuntuadas");
+                parametros.put("USUARIO", String.valueOf(RakutenData.getUsuario().getIdUsuario()));
 
                 break;
         }
 
-//        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
-//        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
 
     }
 
@@ -244,11 +261,15 @@ public class PerfilActivity extends AppCompatActivity {
                         pelicula.setCaratulaPeli(PATH_CARATULA + pelicula.getCaratulaPeli());
                         pelicula.setFotoPeli(PATH_FOTO + pelicula.getFotoPeli());
                     }
-                    adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(),listaPeliculas);
+                    adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
                     recyclerView.setAdapter(adaptadorPeliculas);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
                 } else {
-                    Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "Lista incorrecta. ", Toast.LENGTH_SHORT).show();
+                    if (listaPeliculas.size() == 0) {
+                        Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "No se han encontrado peliculas. ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "Lista incorrecta. ", Toast.LENGTH_SHORT).show();
+                    }
                 }
             } catch (Exception e) {
                 // TODO: handle exception
@@ -256,4 +277,6 @@ public class PerfilActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
