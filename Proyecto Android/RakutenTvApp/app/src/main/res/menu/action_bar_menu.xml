@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/entrar"
+       android:icon="@drawable/entrar"
+        android:title="Acceder"
+        app:showAsAction="ifRoom"
+        android:visible="true">
+
+    </item>
+    <item android:id="@+id/salir"
+       android:icon="@drawable/salir"
+        android:title="Salir"
+        app:showAsAction="ifRoom">
+
+    </item>
+</menu>

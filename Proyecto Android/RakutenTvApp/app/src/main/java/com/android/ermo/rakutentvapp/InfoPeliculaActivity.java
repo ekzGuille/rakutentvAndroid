@@ -132,7 +132,7 @@ public class InfoPeliculaActivity extends AppCompatActivity {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     Toast.makeText(getBaseContext(), "No puedes votar en modo invitado", Toast.LENGTH_SHORT).show();
-                    return true;
+                    return false;
                 }
             });
         }

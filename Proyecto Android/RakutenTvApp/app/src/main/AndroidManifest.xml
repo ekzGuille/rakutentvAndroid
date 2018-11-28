@@ -25,15 +25,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".ListaPeliculasActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".ListaPeliculasActivity" />
         <activity
             android:name=".InfoPeliculaActivity"
-            android:parentActivityName=".InfoPeliculaActivity">
+            android:parentActivityName=".ListaPeliculasActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".InfoPeliculaActivity"></meta-data>
+                android:value=".ListaPeliculasActivity" />
         </activity>
+        <activity android:name=".FiltroActivity" />
+        <activity android:name=".PerfilActivity"></activity>
     </application>
 
 </manifest>

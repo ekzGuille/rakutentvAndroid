@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_weight="30"
         android:orientation="vertical">
 
         <TextView
@@ -88,10 +89,27 @@
             android:padding="5dp"
             android:text="Entrar"
             android:textAllCaps="false"
-            android:textSize="18dp"
-            android:textColor="@color/dorado" />
+            android:textColor="@color/dorado"
+            android:textSize="18dp" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/btnInvitado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:background="@color/grisOscuro"
+                android:text="Entra como invitado"
+                android:textAllCaps="false"
+                android:textColor="@color/hueso"
+                android:textSize="16dp"
+                android:textStyle="italic" />
+        </LinearLayout>
 
     </LinearLayout>
 

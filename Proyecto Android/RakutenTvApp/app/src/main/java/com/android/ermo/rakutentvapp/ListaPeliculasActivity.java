@@ -1,6 +1,7 @@
 package com.android.ermo.rakutentvapp;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,8 +36,11 @@ public class ListaPeliculasActivity extends AppCompatActivity {
     private RecyclerAdaptadorPeliculas adaptadorPeliculas;
     private RecyclerView recyclerView;
     private TextView tx;
-    private Button btnSalir;
     private TextView textSaludo;
+    private Button btnPeliculas;
+    private Button btnBuscar;
+    private Button btnPerfil;
+
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
     private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieFotos/";
@@ -50,39 +57,37 @@ public class ListaPeliculasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_peliculas);
         listaPeliculasActivity = this;
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle("Películas disponibles");
-
-
-        //CARGAR EL SPINNER CON LAS CATEGORIAS DE BD
-
+        getSupportActionBar().setTitle("Cartelera");
 
         tx = (TextView) findViewById(R.id.textLoggedUser);
-        btnSalir = (Button) findViewById(R.id.btnSalir);
         textSaludo = (TextView) findViewById(R.id.textSaludo);
+        btnPeliculas = (Button) findViewById(R.id.btnPeliculas);
+        btnBuscar = (Button) findViewById(R.id.btnBuscar);
+        btnPerfil = (Button) findViewById(R.id.btnPerfil);
 
-        btnSalir.setOnClickListener(new View.OnClickListener() {
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = userPreferences.edit();
-
-                editor.remove("userName");
-                editor.remove("email");
-                editor.remove("contreasena");
-
-                editor.apply();
-
-                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                Intent intent = new Intent(getBaseContext(), FiltroActivity.class);
                 startActivity(intent);
             }
         });
+
+        btnPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), PerfilActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         if(getIntent().hasExtra("usuario")) {
             Usuario usuario = (Usuario) getIntent().getExtras().getSerializable("usuario");
 
             textSaludo.setText("Bienvenido de nuevo ");
             tx.setText(" "+usuario.getUsername());
+
         }else{
             textSaludo.setText("Modo invitado");
         }
@@ -104,6 +109,10 @@ public class ListaPeliculasActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
         finish();
     }
 
@@ -162,4 +171,51 @@ public class ListaPeliculasActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar_menu, menu);
+
+        if(getIntent().hasExtra("usuario")) {
+            menu.findItem(R.id.entrar).setVisible(false);
+            menu.findItem(R.id.salir).setVisible(true);
+        }else{
+            menu.findItem(R.id.entrar).setVisible(true);
+            menu.findItem(R.id.salir).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.entrar:
+
+
+            case R.id.salir:
+
+                SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = userPreferences.edit();
+
+                editor.remove("userName");
+                editor.remove("email");
+                editor.remove("contreasena");
+
+                editor.apply();
+                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(intent);
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+        return true;
+    }
+
+
 }

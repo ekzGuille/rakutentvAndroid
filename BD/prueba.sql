@@ -1,4 +1,3 @@
--- Vista que recopila la cantidad de veces que una pelicula se ha votado así como la media de los votos de dicha pelicula
 -- Parámetros de la vista:
 --		- idPelicula
 -- 		- Veces que se ha votado dicha pelicula 
@@ -30,3 +29,54 @@ WHERE usuario.idUsuario = 3 AND pelicula.idPelicula = 5
 
 
 SELECT usuario.idUsuario, pelicula.idPelicula, marcarfavorito.idMarcarFavorito, puntuacion.idPuntuacion, compra.idCompra FROM usuario, pelicula LEFT OUTER JOIN marcarfavorito ON pelicula.idPelicula = marcarfavorito.idPelicula LEFT OUTER JOIN puntuacion ON pelicula.idPelicula = puntuacion.idPelicula LEFT OUTER JOIN compra ON pelicula.idPelicula = compra.idPelicula WHERE usuario.idUsuario = 3 AND pelicula.idPelicula = 6
+
+SELECT `puntuacion`.`idUsuario` 'idUsuario puntuacion' , `compra`.`idUsuario` 'idUsuario compra' , `marcarfavorito`.`idUsuario` 'idUsuario marcarfavorito' , `pelicula`.`idPelicula`, `puntuacion`.`idPuntuacion`,`compra`.`idCompra`,`marcarfavorito`.`idMarcarFavorito` FROM `pelicula` LEFT OUTER JOIN `puntuacion` ON `puntuacion`.`idPelicula` = `pelicula`.`idPelicula` LEFT OUTER JOIN `compra` ON `compra`.`idPelicula` = `pelicula`.`idPelicula` LEFT OUTER JOIN `marcarfavorito` ON `marcarfavorito`.`idPelicula` = `pelicula`.`idPelicula` WHERE `pelicula`.`idPelicula` = 6 AND (`puntuacion`.`idUsuario` = 3 OR `compra`.`idUsuario` = 3 OR `marcarfavorito`.`idUsuario` = 3)
+
+
+SELECT `puntuacion`.`idUsuario` 'idUsuario puntuacion' , `compra`.`idUsuario` 'idUsuario compra' , `marcarfavorito`.`idUsuario` 'idUsuario marcarfavorito' , `pelicula`.`idPelicula`, `puntuacion`.`idPuntuacion`,`compra`.`idCompra`,`marcarfavorito`.`idMarcarFavorito` FROM `pelicula` LEFT OUTER JOIN `puntuacion` ON `puntuacion`.`idPelicula` = `pelicula`.`idPelicula` LEFT OUTER JOIN `compra` ON `compra`.`idPelicula` = `pelicula`.`idPelicula` LEFT OUTER JOIN `marcarfavorito` ON `marcarfavorito`.`idPelicula` = `pelicula`.`idPelicula` WHERE `pelicula`.`idPelicula` = 6 AND ((`puntuacion`.`idUsuario` = 3 AND `compra`.`idUsuario` = 3 AND `marcarfavorito`.`idUsuario` = 3) OR (`puntuacion`.`idUsuario` = 3 AND `compra`.`idUsuario` = 3 AND `marcarfavorito`.`idUsuario` IS NULL) OR (`puntuacion`.`idUsuario` = 3 AND `compra`.`idUsuario` IS NULL AND `marcarfavorito`.`idUsuario` = 3) OR (`puntuacion`.`idUsuario` = 3 AND `compra`.`idUsuario` IS NULL AND `marcarfavorito`.`idUsuario` IS NULL) or (`puntuacion`.`idUsuario` IS NULL AND `compra`.`idUsuario` = 3 AND `marcarfavorito`.`idUsuario` = 3) OR (`puntuacion`.`idUsuario` IS NULL AND `compra`.`idUsuario` = 3 AND `marcarfavorito`.`idUsuario` IS NULL) OR (`puntuacion`.`idUsuario` IS NULL AND `compra`.`idUsuario` IS NULL AND `marcarfavorito`.`idUsuario` = 3))
+
+
+
+SELECT
+    `puntuacion`.`idUsuario` 'idUsuario puntuacion',
+    `compra`.`idUsuario` 'idUsuario compra',
+    `marcarfavorito`.`idUsuario` 'idUsuario marcarfavorito',
+    `pelicula`.`idPelicula`,
+    `puntuacion`.`idPuntuacion`,
+    `compra`.`idCompra`,
+    `marcarfavorito`.`idMarcarFavorito`
+FROM
+    `pelicula`
+LEFT OUTER JOIN `puntuacion` ON `puntuacion`.`idPelicula` = `pelicula`.`idPelicula`
+LEFT OUTER JOIN `compra` ON `compra`.`idPelicula` = `pelicula`.`idPelicula`
+LEFT OUTER JOIN `marcarfavorito` ON `marcarfavorito`.`idPelicula` = `pelicula`.`idPelicula`
+WHERE
+    `pelicula`.`idPelicula` = 6 AND(
+        (
+            `puntuacion`.`idUsuario` = 3 AND `compra`.`idUsuario` = 3 AND `marcarfavorito`.`idUsuario` = 3
+        ) OR(
+            `puntuacion`.`idUsuario` = 3 AND `compra`.`idUsuario` = 3 AND(
+                `marcarfavorito`.`idUsuario` IS NULL OR `marcarfavorito`.`idUsuario` <> 3
+            )
+        ) OR(
+            `puntuacion`.`idUsuario` = 3 AND(
+                `compra`.`idUsuario` IS NULL OR `compra`.`idUsuario` <> 3
+            ) AND `marcarfavorito`.`idUsuario` = 3
+        ) OR(
+            `puntuacion`.`idUsuario` = 3 AND(
+                `compra`.`idUsuario` IS NULL OR `compra`.`idUsuario` <> 3
+            ) AND(
+                `marcarfavorito`.`idUsuario` IS NULL OR `marcarfavorito`.`idUsuario` <> 3
+            )
+        ) OR(
+            (`puntuacion`.`idUsuario` IS NULL OR  `puntuacion`.`idUsuario` <> 3) AND `compra`.`idUsuario` = 3 AND `marcarfavorito`.`idUsuario` = 3
+        ) OR(
+            (`puntuacion`.`idUsuario` IS NULL OR  `puntuacion`.`idUsuario` <> 3) AND `compra`.`idUsuario` = 3 AND(
+                `marcarfavorito`.`idUsuario` IS NULL OR `marcarfavorito`.`idUsuario` <> 3
+            )
+        ) OR(
+            (`puntuacion`.`idUsuario` IS NULL OR  `puntuacion`.`idUsuario` <> 3) AND(
+                `compra`.`idUsuario` IS NULL OR `compra`.`idUsuario` <> 3
+            ) AND `marcarfavorito`.`idUsuario` = 3
+        )
+    )

@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,6 +30,7 @@ public class LoginActivity extends Activity {
     private EditText edtContrasena;
     private Button btnLogin;
     private CheckBox checkRecordar;
+    private Button btnInvitado;
 
     private static final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
 
@@ -55,7 +54,7 @@ public class LoginActivity extends Activity {
         edtContrasena = (EditText) findViewById(R.id.edtContrasena);
         checkRecordar = (CheckBox) findViewById(R.id.checkRecordar);
         btnLogin = (Button) findViewById(R.id.btnEnviar);
-
+        btnInvitado = (Button) findViewById(R.id.btnInvitado);
 
         SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
 
@@ -74,11 +73,24 @@ public class LoginActivity extends Activity {
             ejecutarEnvioLogin(userName, contrasena);
         }
 
+        btnInvitado.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), ListaPeliculasActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
         finish();
     }
 
@@ -135,6 +147,7 @@ public class LoginActivity extends Activity {
                     RakutenData.setUsuario(usuario);
                     intent.putExtra("usuario", usuario);
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "No se ha encontrado el usuario", Toast.LENGTH_LONG).show();
                 }
