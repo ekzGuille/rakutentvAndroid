@@ -9,10 +9,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
+        android:background="@drawable/bg_spinner_layout"
         android:orientation="horizontal"
         android:paddingTop="5dp"
-        android:paddingBottom="10dp"
-        android:background="@drawable/bg_spinner_layout">
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/triggerGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/grisOscuro"
+            android:text="Lista"
+            android:textColor="@color/hueso"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,6 +37,7 @@
                 android:gravity="right"
                 android:textColor="@color/blanco"
                 android:textSize="15dp" />
+
 
             <TextView
                 android:id="@+id/textLoggedUser"
@@ -43,29 +54,38 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="100">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewPeliculas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="99"
-            >
-
-        </android.support.v7.widget.RecyclerView>
+        android:layout_weight="100"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="100"
+            android:orientation="vertical">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewPeliculas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="99"
+                android:visibility="visible">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/bg_btn_menu"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
             android:paddingLeft="30dp"
+            android:paddingTop="15dp"
             android:paddingRight="30dp"
-            android:layout_weight="1">
+            android:paddingBottom="15dp">
 
             <Button
                 android:id="@+id/btnPeliculas"

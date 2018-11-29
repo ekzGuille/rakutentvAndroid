@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -41,7 +42,7 @@ public class ListaPeliculasActivity extends AppCompatActivity {
     private Button btnPeliculas;
     private Button btnBuscar;
     private Button btnPerfil;
-
+    private Button triggerGrid;
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
     private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieFotos/";
@@ -66,6 +67,53 @@ public class ListaPeliculasActivity extends AppCompatActivity {
         btnPeliculas = (Button) findViewById(R.id.btnPeliculas);
         btnBuscar = (Button) findViewById(R.id.btnBuscar);
         btnPerfil = (Button) findViewById(R.id.btnPerfil);
+        triggerGrid = (Button) findViewById(R.id.triggerGrid);
+
+        SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userPreferences.edit();
+
+        if (userPreferences.getString("VISTA", "").equals("")) {
+            editor.putString("VISTA", "listView");
+        } else {
+            if (userPreferences.getString("VISTA", "").equals("listView")) {
+                RakutenData.setListView(true);
+                triggerGrid.setText("Mostrar GridView");
+
+            } else if (userPreferences.getString("VISTA", "").equals("gridView")) {
+                RakutenData.setListView(false);
+                triggerGrid.setText("Mostrar ListView");
+            }
+        }
+        editor.apply();
+
+
+        triggerGrid.setOnClickListener(new View.OnClickListener() {
+            SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = userPreferences.edit();
+
+            @Override
+            public void onClick(View v) {
+                if (RakutenData.isListView()) {
+                    editor.putString("VISTA", "gridView");
+                    triggerGrid.setText("Mostar GridView");
+                    RakutenData.setListView(false);
+
+                } else {
+                    editor.putString("VISTA", "listView");
+                    triggerGrid.setText("Mostrar ListView");
+                    RakutenData.setListView(true);
+                }
+                editor.apply();
+
+                Intent intent = getIntent();
+                overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(intent);
+            }
+        });
+
 
         btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,9 +214,15 @@ public class ListaPeliculasActivity extends AppCompatActivity {
                         pelicula.setCaratulaPeli(PATH_CARATULA + pelicula.getCaratulaPeli());
                         pelicula.setFotoPeli(PATH_FOTO + pelicula.getFotoPeli());
                     }
-                    adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
-                    recyclerView.setAdapter(adaptadorPeliculas);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                    if (RakutenData.isListView()) {
+                        adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
+                        recyclerView.setAdapter(adaptadorPeliculas);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                    } else {
+                        adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
+                        recyclerView.setAdapter(adaptadorPeliculas);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), 3));
+                    }
                 } else {
                     Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "Lista incorrecta. ", Toast.LENGTH_SHORT).show();
                 }

@@ -63,12 +63,14 @@
                 android:textSize="18dp" />
 
             <ImageView
+                android:id="@+id/imageEstrellas"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="5dp"
                 android:maxWidth="100dp"
                 android:minWidth="100dp"
-                android:src="@drawable/estrella" />
+                android:src="@drawable/estrella"
+                android:visibility="visible"/>
 
 
         </LinearLayout>
@@ -91,6 +93,7 @@
                 android:textSize="18dp" />
 
             <ImageView
+                android:id="@+id/imagenVotados"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="5dp"
@@ -118,6 +121,7 @@
                 android:textSize="18dp" />
 
             <ImageView
+                android:id="@+id/imagenPrecio"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="5dp"

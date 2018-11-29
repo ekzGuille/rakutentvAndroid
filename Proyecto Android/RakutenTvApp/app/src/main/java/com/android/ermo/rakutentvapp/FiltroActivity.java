@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -26,7 +27,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.ermo.rakutentvapp.adaptadores.RecyclerAdaptadorGeneros;
 import com.android.ermo.rakutentvapp.adaptadores.RecyclerAdaptadorPeliculas;
+import com.android.ermo.rakutentvapp.beans.Genero;
 import com.android.ermo.rakutentvapp.beans.Pelicula;
 import com.android.ermo.rakutentvapp.beans.Usuario;
 import com.android.ermo.rakutentvapp.datos.RakutenData;
@@ -42,6 +45,7 @@ import java.util.List;
 public class FiltroActivity extends AppCompatActivity {
 
     private RecyclerAdaptadorPeliculas adaptadorPeliculas;
+    private RecyclerAdaptadorGeneros adaptadorGeneros;
     private RecyclerView recyclerView;
 
     private Button btnPeliculas;
@@ -54,6 +58,8 @@ public class FiltroActivity extends AppCompatActivity {
     private TextView textSaludo;
     private LinearLayout layoutSearch;
     private Button hacerBusqueda;
+    private Button triggerGrid;
+    private ArrayList<String> generosFotos = new ArrayList<>();
 
     private final String IP_LOCAL_SERVIDOR = IPGetter.getInstance().getIP();
     private final String PATH_FOTO = "http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/images/peliculas/movieFotos/";
@@ -78,12 +84,67 @@ public class FiltroActivity extends AppCompatActivity {
         spinnerBusquedaSec = (Spinner) findViewById(R.id.spinnerBusquedaSec);
 
         searchBar = (TextView) findViewById(R.id.searchBar);
+        triggerGrid = (Button) findViewById(R.id.triggerGrid);
+
+        generosFotos.add("https://images-2.wuaki.tv/system/brandable_photos/6231/original/1453732413-1453732413.png");
+        generosFotos.add("https://images-2.wuaki.tv/system/brandable_photos/6349/original/1461242197-1461242197.png");
+        generosFotos.add("https://images-0.wuaki.tv/system/brandable_photos/6354/original/1461243145-1461243145.png");
+        generosFotos.add("https://images-1.wuaki.tv/system/brandable_photos/6356/original/1461243368-1461243368.png");
+        generosFotos.add("https://images-1.wuaki.tv/system/brandable_photos/6359/original/1461243667-1461243667.png");
+        generosFotos.add("https://images-0.wuaki.tv/system/brandable_photos/6372/original/1461246595-1461246595.png");
+        generosFotos.add("https://images-2.wuaki.tv/system/brandable_photos/6357/original/1461243437-1461243437.png");
+
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewPeliculas);
 
         getSupportActionBar().setTitle("Busca tu pelicula");
 
         cargarGlobalSpinner();
+
+        SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userPreferences.edit();
+
+        if (userPreferences.getString("VISTA", "").equals("")) {
+            editor.putString("VISTA", "listView");
+        } else {
+            if (userPreferences.getString("VISTA", "").equals("listView")) {
+                RakutenData.setListView(true);
+                triggerGrid.setText("Mostrar GridView");
+
+            } else if (userPreferences.getString("VISTA", "").equals("gridView")) {
+                RakutenData.setListView(false);
+                triggerGrid.setText("Mostrar ListView");
+            }
+        }
+        editor.apply();
+
+
+        triggerGrid.setOnClickListener(new View.OnClickListener() {
+            SharedPreferences userPreferences = getSharedPreferences("informacion", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = userPreferences.edit();
+
+            @Override
+            public void onClick(View v) {
+                if (RakutenData.isListView()) {
+                    editor.putString("VISTA", "gridView");
+                    triggerGrid.setText("Mostar GridView");
+                    RakutenData.setListView(false);
+
+                } else {
+                    editor.putString("VISTA", "listView");
+                    triggerGrid.setText("Mostrar ListView");
+                    RakutenData.setListView(true);
+                }
+                editor.apply();
+
+                Intent intent = getIntent();
+                overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(intent);
+            }
+        });
 
 
         if (getIntent().hasExtra("usuario") || RakutenData.getUsuario() != null) {
@@ -111,6 +172,18 @@ public class FiltroActivity extends AppCompatActivity {
                     //Titulo
                     layoutSearch.setVisibility(View.VISIBLE);
                     spinnerBusquedaSec.setVisibility(View.GONE);
+
+                } else if (position == 2) {
+                    //Generos
+                    layoutSearch.setVisibility(View.GONE);
+                    spinnerBusquedaSec.setVisibility(View.VISIBLE);
+                    inflateSpinner(position);
+                    cargarGeneros();
+                } else if (position == 7) {
+                    //TOP 10
+                    layoutSearch.setVisibility(View.GONE);
+                    spinnerBusquedaSec.setVisibility(View.GONE);
+                    cargarTop10();
                 } else {
                     //Resto (Spinners)
                     layoutSearch.setVisibility(View.GONE);
@@ -250,6 +323,7 @@ public class FiltroActivity extends AppCompatActivity {
         valoresSpinnerBuscar.add("Ordenar por estreno");
         valoresSpinnerBuscar.add("Ordenar por titulo");
         valoresSpinnerBuscar.add("Ordenar por precio");
+        valoresSpinnerBuscar.add("TOP 10");
 
         ArrayAdapter<String> spAdapterB = new ArrayAdapter<String>(this, R.layout.my_spinner, valoresSpinnerBuscar) {
             @Override
@@ -435,9 +509,30 @@ public class FiltroActivity extends AppCompatActivity {
 
     }
 
+    private void cargarTop10(){
+        HashMap<String, String> parametros = new HashMap<String, String>();
+
+        parametros.put("ACTION", "Pelicula.listMasVotadas");
+        parametros.put("CANTIDAD", "10");
+
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+    }
+
+    private void cargarGeneros() {
+
+        HashMap<String, String> parametros = new HashMap<String, String>();
+
+        parametros.put("ACTION", "Genero.listAll");
+
+        TareaSegundoPlano tarea = new TareaSegundoPlano(parametros);
+        tarea.execute("http://" + IP_LOCAL_SERVIDOR + ":8080/RakutenTV/Controller");
+    }
+
 
     class TareaSegundoPlano extends AsyncTask<String, Integer, Boolean> {
         private ArrayList<Pelicula> listaPeliculas = null;
+        private ArrayList<Genero> listaGeneros = null;
         private HashMap<String, String> parametros = null;
 
 
@@ -457,6 +552,7 @@ public class FiltroActivity extends AppCompatActivity {
                 Post post = new Post();
 
                 JSONArray result = post.getServerDataPost(parametros, url_select);
+                listaGeneros = Genero.getArrayListFromJSon(result);
                 listaPeliculas = Pelicula.getArrayListFromJSon(result);
             } catch (Exception e) {
                 Log.e("log_tag", "Error in http connection " + e.toString());
@@ -479,9 +575,28 @@ public class FiltroActivity extends AppCompatActivity {
                         pelicula.setCaratulaPeli(PATH_CARATULA + pelicula.getCaratulaPeli());
                         pelicula.setFotoPeli(PATH_FOTO + pelicula.getFotoPeli());
                     }
-                    adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
-                    recyclerView.setAdapter(adaptadorPeliculas);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                    if (RakutenData.isListView()) {
+                        adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
+                        recyclerView.setAdapter(adaptadorPeliculas);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                    } else {
+                        adaptadorPeliculas = new RecyclerAdaptadorPeliculas(getBaseContext(), listaPeliculas);
+                        recyclerView.setAdapter(adaptadorPeliculas);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), 3));
+                    }
+                } else if (resp && listaGeneros != null && listaGeneros.size() > 0) {
+                    for (int i = 0; i < listaGeneros.size(); i++) {
+                        listaGeneros.get(i).setFotoGenero(generosFotos.get(i));
+                    }
+                    if (RakutenData.isListView()) {
+                        adaptadorGeneros = new RecyclerAdaptadorGeneros(getBaseContext(), listaGeneros);
+                        recyclerView.setAdapter(adaptadorGeneros);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                    } else {
+                        adaptadorGeneros = new RecyclerAdaptadorGeneros(getBaseContext(), listaGeneros);
+                        recyclerView.setAdapter(adaptadorGeneros);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), 3));
+                    }
                 } else {
                     Toast.makeText(ListaPeliculasActivity.getInstance().getBaseContext(), "No se han encontrado peliculas. ", Toast.LENGTH_SHORT).show();
                 }

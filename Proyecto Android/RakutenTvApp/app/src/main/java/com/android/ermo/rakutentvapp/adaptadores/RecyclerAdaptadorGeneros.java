@@ -12,20 +12,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.ermo.rakutentvapp.FiltroActivity;
 import com.android.ermo.rakutentvapp.InfoPeliculaActivity;
 import com.android.ermo.rakutentvapp.R;
-import com.android.ermo.rakutentvapp.beans.Pelicula;
+import com.android.ermo.rakutentvapp.beans.Genero;
 import com.android.ermo.rakutentvapp.datos.RakutenData;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAdaptadorPeliculas.RecyclerViewHolder> {
+public class RecyclerAdaptadorGeneros extends RecyclerView.Adapter<RecyclerAdaptadorGeneros.RecyclerViewHolder> {
 
     private Context context;
-    private ArrayList<Pelicula> items;
+    private ArrayList<Genero> items;
 
-    public RecyclerAdaptadorPeliculas(Context context, ArrayList<Pelicula> items) {
+    public RecyclerAdaptadorGeneros(Context context, ArrayList<Genero> items) {
         this.context = context;
         this.items = items;
     }
@@ -46,25 +47,18 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
 
-        final Pelicula pelicula = items.get(position);
-        holder.titulo.setText(pelicula.getTituloPeli());
-        holder.mediaPuntuaciones.setText(String.valueOf(pelicula.getMediaValoraciones()));
-        holder.vecesPuntuado.setText(String.valueOf(pelicula.getValoracionesTotales()));
-        holder.precio.setText(String.valueOf(pelicula.getPrecioPeli()) + " €");
-        holder.anio.setText("(" + pelicula.getFechaEstreno().substring(pelicula.getFechaEstreno().length() - 4, pelicula.getFechaEstreno().length()) + ")");
+        final Genero genero = items.get(position);
+        holder.titulo.setText(genero.getDescGenero());
 
-        Glide.with(context).asBitmap().load(pelicula.getCaratulaPeli()).into(holder.caratula);
+        Glide.with(context).asBitmap().load(genero.getFotoGenero()).into(holder.caratula);
 
         holder.lineaerLayoutPadre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RakutenData.setPeliculaSeleccionada(items.get(position));
-                Intent intent = new Intent(context,InfoPeliculaActivity.class);
-                intent.putExtra("pelicula",items.get(position));
-                v.getContext().startActivity(intent);
+
+                
             }
         });
-
     }
 
     @Override
@@ -75,6 +69,7 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         ImageView caratula;
+        ImageView imageEstrellas;
         TextView titulo;
         TextView mediaPuntuaciones;
         TextView vecesPuntuado;
@@ -86,10 +81,22 @@ public class RecyclerAdaptadorPeliculas extends RecyclerView.Adapter<RecyclerAda
             super(itemView);
             caratula = itemView.findViewById(R.id.caratula);
             titulo = itemView.findViewById(R.id.titulo);
+
+            imageEstrellas = itemView.findViewById(R.id.imageEstrellas);
+            imageEstrellas.setVisibility(View.GONE);
+
             mediaPuntuaciones = itemView.findViewById(R.id.mediaPuntuaciones);
+            mediaPuntuaciones.setVisibility(View.GONE);
+
             vecesPuntuado = itemView.findViewById(R.id.vecesPuntuado);
+            vecesPuntuado.setVisibility(View.GONE);
+
             precio = itemView.findViewById(R.id.precio);
+            precio.setVisibility(View.GONE);
+
             anio = itemView.findViewById(R.id.anio);
+            anio.setVisibility(View.GONE);
+
             lineaerLayoutPadre = itemView.findViewById(R.id.linearLayoutPadre);
         }
     }

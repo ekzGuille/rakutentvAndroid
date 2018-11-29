@@ -11,6 +11,7 @@ public class RakutenData {
     private static Usuario usuario;
     private static ArrayList<Pelicula> lstPelicula;
     private static Pelicula peliculaSeleccionada;
+    private static boolean listView;
 
     public static Usuario getUsuario() {
         return usuario;
@@ -34,5 +35,13 @@ public class RakutenData {
 
     public static void setPeliculaSeleccionada(Pelicula peliculaSeleccionada) {
         RakutenData.peliculaSeleccionada = peliculaSeleccionada;
+    }
+
+    public static boolean isListView() {
+        return listView;
+    }
+
+    public static void setListView(boolean listView) {
+        RakutenData.listView = listView;
     }
 }
